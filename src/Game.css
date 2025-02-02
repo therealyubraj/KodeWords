@@ -1,0 +1,19 @@
+.Game {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Role {
+  margin: 1rem;
+  color: white;
+}
+
+.CardGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 0.5rem;
+  justify-content: center;
+}

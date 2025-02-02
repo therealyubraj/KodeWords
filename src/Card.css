@@ -1,0 +1,28 @@
+.Card {
+  position: relative;
+  width: 12rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.CardImage {
+  width: 12rem;
+  object-fit: cover;
+}
+
+.CardType {
+  position: absolute;
+  top: 34%;
+  left: 40%;
+  transform: translate(-50%, -50%);
+  font-size: 0.8rem;
+  font-weight: bolder;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.CardWord {
+  position: absolute;
+  bottom: 12%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.2rem;
+  font-weight: 900;
+}
