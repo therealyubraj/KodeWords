@@ -3,8 +3,4 @@ type CardProps = {
   type : string
 }
 
-type GameProps = {
-  role: string,
-}
-
-export {CardProps, GameProps};
+export {CardProps};
