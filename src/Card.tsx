@@ -2,28 +2,44 @@ import "./Card.css";
 import { CardProps } from "../types/types";
 import React, { useEffect, useReducer, useState } from "react";
 
-const Card = ({ word, type }: CardProps) => {
-  const [cardImage, setCardImage] = useState();
+const Card = ({ word, type, clickable, id }: CardProps) => {
+  const [cardType, setCardType] = useState(type);
+  const [cardImage, setCardImage] = useState("assets/card/gray.png");
+  const [click, setClick] = useState(false);
+
   useEffect(() => {
-    const fetchImage = async () => {
-      try {
-        const response = await import(`./assets/card/${type}.png`);
-        if (response.default) setCardImage(response.default);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    fetchImage();
+    let card_type = clickable ? "gray" : type;
+    setCardImage(`/assets/card/${card_type}.png`);
+    card_type = card_type == "black" ? "assassian" : card_type;
+    card_type = card_type == "gray" ? "neutral" : card_type;
+    setCardType(card_type);
   }, [type]);
-  const fontColor = type == "black" ? "white" : "black";
-  let cardType = type == "black" ? "assassian" : type;
+
+  const onCardClick = () => {
+    if (clickable) {
+      setClick(!click);
+      // transform: rotatex(55deg) translatez(42px);
+      const cardSrc = click ? `/assets/card/gray.png` : `/assets/bg/${type}.png`;
+      setCardImage(cardSrc);
+    }
+  };
+
+  const fontColor = !clickable && type == "black" ? "white" : "black";
+  const totalAgents = type == "gray" ? 5 : 8;
+  const offsetFactor = 100 / totalAgents;
   return (
-    <div className="Card">
+    <div className="Card" style={{ cursor: clickable ? "pointer" : "default" }} onClick={onCardClick}>
       <img src={cardImage} alt={`Card_${type}`} className="CardImage" />
-      <h2 className="CardType">{cardType.toUpperCase()}</h2>
-      <h1 className="CardWord" style={{ color: fontColor }}>
-        {word}
-      </h1>
+      {!click ? (
+        <>
+          <h2 className="CardType">{cardType.toUpperCase()}</h2>
+          <h1 className="CardWord" style={{ color: fontColor }}>
+            {word}
+          </h1>
+        </>
+      ) : (
+        <div style={{ backgroundImage: `url(/assets/agent/${type}.png)`, backgroundPositionY: `${(Number(id) % totalAgents) * offsetFactor}%` }} className="CardAgent" />
+      )}
     </div>
   );
 };

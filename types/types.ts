@@ -1,6 +1,14 @@
 type CardProps = {
   word:string,
   type : string
+  clickable?: boolean
+  id?: number
 }
 
-export {CardProps};
+type WordType = {
+  word: string;
+  type: string;
+  id?: number;
+};
+
+export {CardProps, WordType};

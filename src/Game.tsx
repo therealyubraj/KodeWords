@@ -4,44 +4,53 @@ import Card from "./Card";
 import "./Game.css";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { WordType } from "types/types";
+import { ppid } from "process";
 
-function RNG(seed: number) {
-  var m = 2 ** 35 - 31;
-  var a = 185852;
-  var s = seed % m;
-  return (s = (s * a) % m) / m;
+function RNG(s: number) {
+  s = Math.sin(s) * 10000;
+  return s - Math.floor(s);
 }
 
-type WordType = {
-  word: string;
-  type: string;
-};
 const Game = () => {
   const { role, roomid } = useParams();
+  const [shuffledWords, setShuffledWords] = useState<Array<WordType>>([]);
+  const [firstTurn, setFirstTurn] = useState<"red" | "blue">(RNG(Number(roomid)) > 0.5 ? "red" : "blue");
 
-  const randomWordList: Array<string> = [];
-  const randomStart = Math.floor(RNG(Number(roomid)) * 1000) % wordList.classic.length;
+  useEffect(() => {
+    const randomWordList: Array<string> = [];
+    let i = 0;
 
-  for (let i = 0; i < 25; i++) {
-    const index = randomStart + i;
-    console.log(index);
-    const randomWord = wordList.classic[index];
-    randomWordList.push(randomWord);
-  }
+    while (randomWordList.length < 25) {
+      const randomIndex = Math.floor(RNG(Number(roomid) + i) * wordList.classic.length) % wordList.classic.length;
+      i += 1;
+      const randomWord = wordList.classic[randomIndex];
+      if (randomWordList.includes(randomWord)) {
+        continue;
+      }
+      randomWordList.push(randomWord);
+    }
 
-  // Split the words into the different categories
-  const redWords = randomWordList.slice(0, 8);
-  const blueWords = randomWordList.slice(8, 16);
-  const blackWord = randomWordList[16];
-  const neutralWords = randomWordList.slice(17, 25);
+    // Split the words into the different categories
+    const endIndex = firstTurn === "red" ? 9 : 8;
+    const redWords = randomWordList.slice(0, endIndex);
+    const blueWords = randomWordList.slice(endIndex, 16);
+    const grayWords = randomWordList.slice(17, 25);
+    const blackWord = randomWordList[16];
 
-  // Shuffle the words
-  const shuffledWords = [...redWords.map(word => ({ word, type: "red" })), ...blueWords.map(word => ({ word, type: "blue" })), { word: blackWord, type: "black" }, ...neutralWords.map(word => ({ word, type: "neutral" }))].sort(() => Math.random() - 0.5);
+    const tempWords = [...redWords.map((word, i) => ({ word, type: "red", id: i })), ...blueWords.map((word, i) => ({ word, type: "blue", id: i })), { word: blackWord, type: "black" }, ...grayWords.map((word, i) => ({ word, type: "gray", id: i }))];
+    setShuffledWords(tempWords);
+    setFirstTurn(RNG(Number(roomid) * 10) > 0.5 ? "red" : "blue");
+  }, []);
+  useEffect(() => {
+    document.documentElement.style.setProperty("--base", `radial-gradient(circle, ${firstTurn == "red" ? "#e48957" : "#8fc0ef"}, ${firstTurn == "red" ? "#461408" : "#113154"})`);
+  }, [firstTurn]);
 
-  let cardList = shuffledWords.map((card, index) => <Card key={index} word={card.word} type={card.type} />);
-  // Assign the words to the cards
-  if (role === "operative") {
-    cardList = shuffledWords.map((card, index) => <Card key={index} word={card.word} type="neutral" />);
+  for (let i = 0; i < shuffledWords.length; i++) {
+    const j = Math.floor(RNG(Number(roomid) + i) * 100) % shuffledWords.length;
+    const temp = shuffledWords[i];
+    shuffledWords[i] = shuffledWords[j];
+    shuffledWords[j] = temp;
   }
 
   return (
@@ -53,7 +62,23 @@ const Game = () => {
         <h1 className="Role">{role?.toUpperCase()}</h1>
         <h3 className="Roomid">Room ID: {roomid}</h3>
       </nav>
-      <div className="CardGrid">{cardList}</div>
+      <div className="GameContainer">
+        <div className="GridHeader">
+          <div className="screw">
+            <div className="indent" />
+          </div>
+          <div>
+            <h4 className={firstTurn}>
+              <span>First Turn:</span>
+              {firstTurn.toUpperCase()}{" "}
+            </h4>
+          </div>
+          <div className="screw">
+            <div className="indent" />
+          </div>
+        </div>
+        <div className="CardGrid">{shuffledWords.map((card, index) => (role === "spymaster" ? <Card key={index} word={card.word} type={card.type} id={card.id} /> : <Card key={index} id={card.id} word={card.word} type={card.type} clickable={true} />))}</div>
+      </div>
     </div>
   );
 };

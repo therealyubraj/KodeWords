@@ -1,14 +1,27 @@
 .Card {
   position: relative;
   width: 12rem;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .CardImage {
   width: 12rem;
   object-fit: cover;
 }
 
-.CardType {
+.CardAgent {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 8rem;
+  height: 7rem;
+  transform: translatex(-50%);
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+
+.Card .CardType {
   position: absolute;
   top: 34%;
   left: 40%;
@@ -20,7 +33,7 @@
 
 .CardWord {
   position: absolute;
-  bottom: 12%;
+  bottom: 10%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 1.2rem;

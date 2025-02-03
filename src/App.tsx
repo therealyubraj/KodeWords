@@ -10,7 +10,6 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  // List of 25 random words
   return (
     <div className="App">
       <RouterProvider router={router} />
