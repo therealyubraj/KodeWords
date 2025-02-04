@@ -5,6 +5,7 @@ import Home from "./Home";
 import Game from "./Game";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 const router = createBrowserRouter([
+  { path: "/", element: <Home /> },
   { path: "/KodeWords", element: <Home /> },
   { path: "/home", element: <Home /> },
   { path: "/game/:role/:roomid", element: <Game /> },
