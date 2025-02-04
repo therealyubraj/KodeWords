@@ -10,7 +10,7 @@ const Card = ({ word, type, clickable, id }: CardProps) => {
 
   useEffect(() => {
     let card_type = clickable ? "gray" : type;
-    setCardImage(`./assets/card/${card_type}.png`);
+    setCardImage(`${IMGPATH}/assets/card/${card_type}.png`);
     card_type = card_type == "black" ? "assassian" : card_type;
     card_type = card_type == "gray" ? "neutral" : card_type;
     setCardType(card_type);
