@@ -1,15 +1,16 @@
 import "./Card.css";
 import { CardProps } from "../types/types";
 import React, { useEffect, useReducer, useState } from "react";
+import { IMGPATH } from "./Linker";
 
 const Card = ({ word, type, clickable, id }: CardProps) => {
   const [cardType, setCardType] = useState(type);
-  const [cardImage, setCardImage] = useState("assets/card/gray.png");
+  const [cardImage, setCardImage] = useState(IMGPATH + "/assets/card/gray.png");
   const [click, setClick] = useState(false);
 
   useEffect(() => {
     let card_type = clickable ? "gray" : type;
-    setCardImage(`/assets/card/${card_type}.png`);
+    setCardImage(`./assets/card/${card_type}.png`);
     card_type = card_type == "black" ? "assassian" : card_type;
     card_type = card_type == "gray" ? "neutral" : card_type;
     setCardType(card_type);
@@ -19,7 +20,7 @@ const Card = ({ word, type, clickable, id }: CardProps) => {
     if (clickable) {
       setClick(!click);
       // transform: rotatex(55deg) translatez(42px);
-      const cardSrc = click ? `/assets/card/gray.png` : `/assets/bg/${type}.png`;
+      const cardSrc = click ? `${IMGPATH}/assets/card/gray.png` : `${IMGPATH}/assets/bg/${type}.png`;
       setCardImage(cardSrc);
     }
   };
@@ -38,7 +39,7 @@ const Card = ({ word, type, clickable, id }: CardProps) => {
           </h1>
         </>
       ) : (
-        <div style={{ backgroundImage: `url(/assets/agent/${type}.png)`, backgroundPositionY: `${(Number(id) % totalAgents) * offsetFactor}%` }} className="CardAgent" />
+        <div style={{ backgroundImage: `url(${IMGPATH}/assets/agent/${type}.png)`, backgroundPositionY: `${(Number(id) % totalAgents) * offsetFactor}%` }} className="CardAgent" />
       )}
     </div>
   );
